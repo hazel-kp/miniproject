@@ -2,3 +2,4 @@
 #hazel bikin nyaman
 print("Hello")
 buku = input("Buku : ")
+bukut = buku *buku
