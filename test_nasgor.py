@@ -3,5 +3,5 @@
 print("Hello")
 buku = int(input("Buku : "))
 bukut = buku *buku
-
+print("jumlah buku")
 print(bukut)
