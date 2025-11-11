@@ -1,3 +1,3 @@
 print("Hello")
 
-mobil = int(iput("Mobil : "))
+mobil = int(input("Mobil : "))
