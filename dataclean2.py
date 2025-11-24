@@ -1,41 +1,120 @@
 import pandas as pd
-import numpy as np
+import matplotlib.pyplot as plt
 
 # --- 1. BACA DATA ---
-df = pd.read_excel("tuna-fix.xlsx")
+df = pd.read_excel("tuna-fix-cleaned.xlsx")
 
-# --- 2. MEMBERSIHKAN DATA KOSONG ---
+# --- 2. MEMBERSIHKAN DATA ---
 required_cols = ["Year", "State", "NMFS Name", "Pounds", "Metric Tons"]
-
 df_clean = df.dropna(subset=required_cols).copy()
 
-# --- 3. KONVERSI KOLOM MENJADI NUMERIC ---
-# jika ada teks seperti '1,234' atau ' 900 ' akan otomatis dibersihkan
 df_clean["Pounds"] = pd.to_numeric(df_clean["Pounds"], errors="coerce")
 df_clean["Metric Tons"] = pd.to_numeric(df_clean["Metric Tons"], errors="coerce")
-
-# Buang baris yang gagal dikonversi
 df_clean = df_clean.dropna(subset=["Pounds", "Metric Tons"])
 
-# --- 4. CEK KEC0C0KAN POUNDS <-> METRIC TONS ---
-CONVERSION = 2204.62  # 1 metric ton = 2204.62 pounds
+# -----------------------------
+#         GRAFIK 1
+#   TOTAL POUNDS PER YEAR
+# -----------------------------
+plt.figure()
+df_clean.groupby("Year")["Pounds"].sum().plot()
+plt.title("Total Pounds per Year")
+plt.xlabel("Year")
+plt.ylabel("Pounds")
+plt.tight_layout()
+plt.show()
 
-df_clean["Pounds_from_MT"] = df_clean["Metric Tons"] * CONVERSION
-df_clean["Diff"] = abs(df_clean["Pounds"] - df_clean["Pounds_from_MT"])
+# -----------------------------
+#         GRAFIK 2
+#   TOTAL METRIC TONS PER STATE
+# -----------------------------
+plt.figure()
+df_clean.groupby("State")["Metric Tons"].sum().plot(kind="bar")
+plt.title("Total Metric Tons per State")
+plt.xlabel("State")
+plt.ylabel("Metric Tons")
+plt.tight_layout()
+plt.show()
 
-tolerance = 5  # batas toleransi selisih
-df_clean["Pounds_MT_Mismatch"] = df_clean["Diff"] > tolerance
+# -----------------------------
+#         GRAFIK 3
+#   SCATTER POUNDS vs METRIC TONS
+# -----------------------------
+plt.figure()
+plt.scatter(df_clean["Pounds"], df_clean["Metric Tons"])
+plt.title("Relationship between Pounds and Metric Tons")
+plt.xlabel("Pounds")
+plt.ylabel("Metric Tons")
+plt.tight_layout()
+plt.show()
 
-# --- 5. PERBAIKI DATA YANG TIDAK SESUAI ---
-df_clean.loc[df_clean["Pounds_MT_Mismatch"], "Pounds"] = (
-    df_clean.loc[df_clean["Pounds_MT_Mismatch"], "Metric Tons"] * CONVERSION
-)
+# -----------------------------
+#         GRAFIK 4
+#         PIE CHART
+# -----------------------------
+plt.figure()
+state_totals = df_clean.groupby("State")["Pounds"].sum()
+plt.pie(state_totals, labels=state_totals.index, autopct="%1.1f%%")
+plt.title("Percentage of Total Pounds by State")
+plt.tight_layout()
+plt.show()
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# Hapus kolom bantu
-df_clean = df_clean.drop(columns=["Pounds_from_MT", "Diff"])
+# --- 1. BACA DATA ---
+df = pd.read_excel("tuna-fix-cleaned.xlsx")
 
-# --- 6. SIMPAN FILE ---
-df_clean.to_excel("tuna-fix-cleaned.xlsx", index=False)
+# --- 2. MEMBERSIHKAN DATA ---
+required_cols = ["Year", "State", "NMFS Name", "Pounds", "Metric Tons"]
+df_clean = df.dropna(subset=required_cols).copy()
 
-print("Data berhasil dibersihkan dan disimpan sebagai tuna-fix-cleaned.xlsx")
-print(df_clean.head())
+df_clean["Pounds"] = pd.to_numeric(df_clean["Pounds"], errors="coerce")
+df_clean["Metric Tons"] = pd.to_numeric(df_clean["Metric Tons"], errors="coerce")
+df_clean = df_clean.dropna(subset=["Pounds", "Metric Tons"])
+
+# -----------------------------
+#         GRAFIK 1
+#   TOTAL POUNDS PER YEAR
+# -----------------------------
+plt.figure()
+df_clean.groupby("Year")["Pounds"].sum().plot()
+plt.title("Total Pounds per Year")
+plt.xlabel("Year")
+plt.ylabel("Pounds")
+plt.tight_layout()
+plt.show()
+
+# -----------------------------
+#         GRAFIK 2
+#   TOTAL METRIC TONS PER STATE
+# -----------------------------
+plt.figure()
+df_clean.groupby("State")["Metric Tons"].sum().plot(kind="bar")
+plt.title("Total Metric Tons per State")
+plt.xlabel("State")
+plt.ylabel("Metric Tons")
+plt.tight_layout()
+plt.show()
+
+# -----------------------------
+#         GRAFIK 3
+#   SCATTER POUNDS vs METRIC TONS
+# -----------------------------
+plt.figure()
+plt.scatter(df_clean["Pounds"], df_clean["Metric Tons"])
+plt.title("Relationship between Pounds and Metric Tons")
+plt.xlabel("Pounds")
+plt.ylabel("Metric Tons")
+plt.tight_layout()
+plt.show()
+
+# -----------------------------
+#         GRAFIK 4
+#         PIE CHART
+# -----------------------------
+plt.figure()
+state_totals = df_clean.groupby("State")["Pounds"].sum()
+plt.pie(state_totals, labels=state_totals.index, autopct="%1.1f%%")
+plt.title("Percentage of Total Pounds by State")
+plt.tight_layout()
+plt.show()
