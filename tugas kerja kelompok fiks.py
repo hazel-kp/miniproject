@@ -64,7 +64,7 @@ def tentukan_grade(ipk):
 def tentukan_predikat(ipk, lama_studi):
     if ipk >= 3.75 and lama_studi <= 8:
         return "Cumlaude (Dengan Pujian)"
-    elif ipk >= 3.50 and lama_studi <= 9:
+    elif ipk >= 3.50 and lama_studi <= 10:
         return "Sangat Memuaskan"
     elif ipk >= 3.00:
         return "Memuaskan"

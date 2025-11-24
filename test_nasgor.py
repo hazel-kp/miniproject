@@ -3,6 +3,5 @@
 print("Hello")
 buku = int(input("Buku : "))
 bukut = buku *buku
-print("jumlah buku")
+print("jumlah buku adalah :")
 print(bukut)
-print("Pisang keju")
